@@ -490,9 +490,9 @@ body {
   margin: 0;
 }
 
-.sidebar-section input[type="number"] {
+/* .sidebar-section input[type="number"] {
   -moz-appearance: textfield;
-}
+} */
 
 .stars-filter {
   color: #ff7a00;
@@ -586,4 +586,45 @@ body {
   .footer-dark {
     padding: 40px 20px 20px;
   }
+}
+
+.star-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.single-star {
+  font-size: 24px;
+  cursor: pointer;
+  color: #cfcfcf;
+  transition: 0.2s;
+}
+
+.single-star:hover {
+  transform: scale(1.08);
+}
+
+.active-star {
+  color: #ffb400;
+}
+
+.review-up-text {
+  font-size: 15px;
+  color: #333;
+  font-weight: 600;
+}
+
+.clear-rating {
+  margin-top: 12px;
+  color: #2162a1;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.clear-rating:hover {
+  text-decoration: underline;
 }

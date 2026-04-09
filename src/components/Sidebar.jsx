@@ -43,45 +43,22 @@ function Sidebar({
       <div className="sidebar-section">
         <h3>Customer Reviews</h3>
 
-        <p
-          className={`stars-filter ${selectedRating === 5 ? "active-filter" : ""}`}
-          onClick={() => setSelectedRating(5)}
-        >
-          ★★★★★ & Up
-        </p>
+        <div className="star-row">
+          {[1, 2, 3, 4, 5].map((star) => (
+            <span
+              key={star}
+              className={`single-star ${
+                star <= selectedRating ? "active-star" : ""
+              }`}
+              onClick={() => setSelectedRating(star)}
+            >
+              ★
+            </span>
+          ))}
+          <span className="review-up-text">&nbsp;& Up</span>
+        </div>
 
-        <p
-          className={`stars-filter ${selectedRating === 4 ? "active-filter" : ""}`}
-          onClick={() => setSelectedRating(4)}
-        >
-          ★★★★☆ & Up
-        </p>
-
-        <p
-          className={`stars-filter ${selectedRating === 3 ? "active-filter" : ""}`}
-          onClick={() => setSelectedRating(3)}
-        >
-          ★★★☆☆ & Up
-        </p>
-
-        <p
-          className={`stars-filter ${selectedRating === 2 ? "active-filter" : ""}`}
-          onClick={() => setSelectedRating(2)}
-        >
-          ★★☆☆☆ & Up
-        </p>
-
-        <p
-          className={`stars-filter ${selectedRating === 1 ? "active-filter" : ""}`}
-          onClick={() => setSelectedRating(1)}
-        >
-          ★☆☆☆☆ & Up
-        </p>
-
-        <p
-          className="clear-rating"
-          onClick={() => setSelectedRating(0)}
-        >
+        <p className="clear-rating" onClick={() => setSelectedRating(0)}>
           Clear Rating Filter
         </p>
       </div>
