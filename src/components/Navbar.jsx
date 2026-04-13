@@ -9,10 +9,21 @@ const Navbar = ({ toggleSidebar, setSearch }) => {
   return (
     <div className="navbar">
       <div className="nav-container">
-        <div className="logo">
+
+        {/* LOGO */}
+        <div className="logo" onClick={() => navigate("/")}>
           <img src={logo} alt="logo" />
         </div>
 
+        {/* NAV LINKS */}
+        <ul className="nav-links">
+          <li onClick={() => navigate("/")}>Home</li>
+          <li onClick={() => navigate("/about")}>About</li>
+          <li onClick={() => navigate("/contact")}>Contact</li>
+          <li onClick={() => navigate("/address")}>Address</li>
+        </ul>
+
+        {/* SEARCH */}
         <div className="nav-search">
           <input
             type="text"
@@ -26,6 +37,7 @@ const Navbar = ({ toggleSidebar, setSearch }) => {
           <button type="button">🔍</button>
         </div>
 
+        {/* RIGHT SECTION */}
         <div className="nav-right">
           <div className="cart" onClick={() => navigate("/cart")}>
             🛒
@@ -35,6 +47,7 @@ const Navbar = ({ toggleSidebar, setSearch }) => {
             ☰
           </div>
         </div>
+
       </div>
     </div>
   );
