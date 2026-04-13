@@ -1,34 +1,60 @@
-import React from "react";
 import { useParams } from "react-router-dom";
 import products from "../products";
 
-const ProductDetails = ({ addToCart }) => {
+const ProductDetails = ({ addToCart, cart }) => {
   const { id } = useParams();
 
-  const product = products.find((item) => item.id === Number(id));
+  const product = products.find(
+    (item) => item.id === Number(id)
+  );
 
-  if (!product) {
-    return <h2>Product not found</h2>;
-  }
+  if (!product) return <h2>Product not found</h2>;
+
+  const isAdded = cart?.some(
+    (item) => item.id === product.id
+  );
 
   return (
-    <div className="product-details-container">
-      <div className="product-details-image">
-        <img src={product.thumbnail} alt={product.title} />
-      </div>
+    <div className="details-wrapper">
+      <div className="details-container">
 
-      <div className="product-details-info">
-        <h1>{product.title}</h1>
-        <p className="price">₹{product.price}</p>
-        <p className="rating">⭐ {product.rating}</p>
-        <p className="description">{product.description}</p>
+        {/* IMAGE */}
+        <div className="left-section">
+          <div className="main-image-box">
+            <img
+              src={product.thumbnail}
+              alt={product.title}
+              className="main-image"
+            />
+          </div>
+        </div>
 
-        <button
-          className="add-to-cart-btn"
-          onClick={() => addToCart(product)}
-        >
-          Add to Cart
-        </button>
+        {/* DETAILS */}
+        <div className="right-section">
+          <h1 className="product-title-details">
+            {product.title}
+          </h1>
+
+          <p className="product-description">
+            {product.description}
+          </p>
+
+          <h2 className="product-price-details">
+            ₹{product.price}
+          </h2>
+
+          <p className="extra-text">
+            Free delivery | 7 days return
+          </p>
+
+          <button
+            className={`details-cart-btn ${isAdded ? "added" : ""}`}
+            onClick={() => addToCart(product)}
+          >
+            {isAdded ? "Added" : "Add to Cart"}
+          </button>
+        </div>
+
       </div>
     </div>
   );

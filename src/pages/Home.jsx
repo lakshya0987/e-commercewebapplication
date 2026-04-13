@@ -5,7 +5,7 @@ import ProductsList from "../components/ProductsList";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 
-const Home = ({ addToCart }) => {
+const Home = ({ addToCart, cart }) => {
   const [search, setSearch] = useState("");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
@@ -63,6 +63,7 @@ const Home = ({ addToCart }) => {
           <ProductsList
             products={filteredProducts}
             addToCart={addToCart}
+            cart={cart}   // 🔥 IMPORTANT
           />
         </div>
       </div>

@@ -53,11 +53,14 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<Home addToCart={addToCart} />} />
+      <Route
+        path="/"
+        element={<Home addToCart={addToCart} cart={cart} />}
+      />
 
       <Route
         path="/product/:id"
-        element={<ProductDetails addToCart={addToCart} />}
+        element={<ProductDetails addToCart={addToCart} cart={cart} />}
       />
 
       <Route
