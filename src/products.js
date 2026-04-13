@@ -45,7 +45,7 @@ const products = [
     price: 950,
     rating: 4.3,
     thumbnail:
-      "https://images.unsplash.com/photo-1613145993481-8c4c97a36f7f?w=600",
+      "https://i.pinimg.com/736x/4d/1d/a8/4d1da885248ced0753cfe75b887fe7a9.jpg",
     description: "Ergonomic gaming mouse with RGB lighting.",
     category: "Gaming",
   },

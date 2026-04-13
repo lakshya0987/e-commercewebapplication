@@ -7,7 +7,10 @@ const ProductsList = ({ products, addToCart }) => {
         {products && products.length > 0 ? (
           products.map((product) => (
             <div className="product-card" key={product.id}>
+
               <Link to={`/product/${product.id}`} className="product-link">
+
+                {/* IMAGE */}
                 <div className="product-image-box">
                   <img
                     src={product.thumbnail}
@@ -16,18 +19,35 @@ const ProductsList = ({ products, addToCart }) => {
                   />
                 </div>
 
+                {/* INFO */}
                 <div className="product-info">
-                  <h3>{product.title}</h3>
-                  <p>₹{product.price}</p>
+
+                  <h3 className="product-title-list">
+                    {product.title}
+                  </h3>
+
+                 <p className="product-desc">{product.description}</p>
+
+                    <p className="extra-text">
+                      Free delivery | 7 days return
+                    </p>
+
+                  <p className="product-price">
+                    ₹{product.price}
+                  </p>
+
                 </div>
+
               </Link>
 
+              {/* BUTTON OUTSIDE LINK */}
               <button
                 className="add-to-cart-btn"
                 onClick={() => addToCart(product)}
               >
                 Add to Cart
               </button>
+
             </div>
           ))
         ) : (
