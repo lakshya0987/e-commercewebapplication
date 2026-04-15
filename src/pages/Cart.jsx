@@ -1,4 +1,5 @@
-import Navbar from "../components/Navbar";
+import TopHeader from "../components/TopHeader";
+import MainHeader from "../components/MainHeader";
 import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
 
@@ -18,82 +19,63 @@ function Cart({
 
   return (
     <div className="page-wrapper">
-      <Navbar
+      <TopHeader />
+      <MainHeader
         search={search}
         setSearch={setSearch}
         totalCartItems={totalCartItems}
       />
 
       <section className="cart-page">
-        <div className="cart-header">
-          <h1>Your Cart</h1>
-          <p>{totalCartItems} item(s) added</p>
-        </div>
+        <h1 className="cart-page-title">Your Cart</h1>
 
         {cart.length === 0 ? (
-          <div className="empty-page">
+          <div className="cart-empty-box">
             <h2>Your cart is empty</h2>
-            <Link to="/" className="back-home-btn">
-              Shop Now
+            <Link to="/" className="cart-back-btn">
+              Continue Shopping
             </Link>
           </div>
         ) : (
           <div className="cart-layout">
-            <div className="cart-items-section">
+            <div className="cart-left">
               {cart.map((item) => (
                 <div className="cart-item" key={item.id}>
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="cart-item-image"
-                  />
+                  <img src={item.image} alt={item.title} className="cart-img" />
 
-                  <div className="cart-item-details">
+                  <div className="cart-info">
                     <h3>{item.title}</h3>
-                    <p>{item.description}</p>
-                    <h4>₹{item.price}</h4>
+                    <p>{item.condition}</p>
+                    <h4>${item.price}</h4>
 
-                    <div className="quantity-controls">
+                    <div className="cart-qty-row">
                       <button onClick={() => decreaseQuantity(item.id)}>-</button>
                       <span>{item.quantity}</span>
                       <button onClick={() => increaseQuantity(item.id)}>+</button>
                     </div>
                   </div>
 
-                  <div className="cart-item-right">
-                    <p className="cart-item-total">
-                      ₹{item.price * item.quantity}
-                    </p>
-                    <button
-                      className="remove-btn"
-                      onClick={() => removeFromCart(item.id)}
-                    >
-                      Remove
-                    </button>
-                  </div>
+                  <button
+                    className="remove-cart-btn"
+                    onClick={() => removeFromCart(item.id)}
+                  >
+                    Remove
+                  </button>
                 </div>
               ))}
             </div>
 
-            <div className="cart-summary">
+            <div className="cart-right">
               <h2>Order Summary</h2>
-              <div className="summary-row">
+              <div className="cart-summary-row">
+                <span>Items</span>
+                <span>{totalCartItems}</span>
+              </div>
+              <div className="cart-summary-row">
                 <span>Subtotal</span>
-                <span>₹{subtotal}</span>
+                <span>${subtotal.toFixed(2)}</span>
               </div>
-              <div className="summary-row">
-                <span>Delivery</span>
-                <span>Free</span>
-              </div>
-              <div className="summary-row total-row">
-                <span>Total</span>
-                <span>₹{subtotal}</span>
-              </div>
-
               <button className="checkout-btn">Proceed to Checkout</button>
-              <Link to="/" className="continue-shopping-link">
-                Continue Shopping
-              </Link>
             </div>
           </div>
         )}

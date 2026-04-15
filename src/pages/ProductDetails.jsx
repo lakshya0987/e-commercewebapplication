@@ -1,5 +1,10 @@
-import { Link, useParams } from "react-router-dom";
-import Navbar from "../components/Navbar";
+import { useParams } from "react-router-dom";
+import { useMemo } from "react";
+import TopHeader from "../components/TopHeader";
+import MainHeader from "../components/MainHeader";
+import SuggestionBar from "../components/SuggestionBar";
+import SingleProductGallery from "../components/SingleProductGallery";
+import SingleProductInfo from "../components/SingleProductInfo";
 import Footer from "../components/Footer";
 
 function ProductDetails({
@@ -13,19 +18,22 @@ function ProductDetails({
 
   const product = products.find((item) => String(item.id) === String(id));
 
+  const similarProducts = useMemo(() => {
+    if (!product) return [];
+    return products.filter((item) => item.id !== product.id).slice(0, 6);
+  }, [products, product]);
+
   if (!product) {
     return (
       <div className="page-wrapper">
-        <Navbar
+        <TopHeader />
+        <MainHeader
           search={search}
           setSearch={setSearch}
           totalCartItems={totalCartItems}
         />
-        <div className="empty-page">
+        <div className="not-found-box">
           <h2>Product not found</h2>
-          <Link to="/" className="back-home-btn">
-            Go Back Home
-          </Link>
         </div>
         <Footer />
       </div>
@@ -34,64 +42,23 @@ function ProductDetails({
 
   return (
     <div className="page-wrapper">
-      <Navbar
+      <TopHeader />
+      <MainHeader
         search={search}
         setSearch={setSearch}
         totalCartItems={totalCartItems}
       />
 
-      <section className="details-page">
-        <div className="details-container">
-          <div className="details-image-box">
-            <img
-              src={product.image}
-              alt={product.title}
-              className="details-image"
-            />
-          </div>
+      <SuggestionBar />
 
-          <div className="details-content">
-            <p className="details-category">
-              {product.category || "Electronics"}
-            </p>
-
-            <h1 className="details-title">{product.title}</h1>
-
-            <div className="details-rating-row">
-              <span className="rating-badge">⭐ {product.rating.toFixed(1)}</span>
-              <span className="stock-text">
-                {product.stock ? `${product.stock} in stock` : "In stock"}
-              </span>
-            </div>
-
-            <p className="details-price">₹{product.price}</p>
-
-            <p className="details-description">{product.description}</p>
-
-            <div className="details-feature-list">
-              <p>✔ Premium quality finish</p>
-              <p>✔ Fast delivery available</p>
-              <p>✔ 7 days return policy</p>
-              <p>✔ Secure checkout experience</p>
-            </div>
-
-            <div className="details-buttons">
-              <button
-                className="details-cart-btn"
-                onClick={() => addToCart(product)}
-              >
-                Add to Cart
-              </button>
-
-              <Link to="/cart" className="details-view-cart-btn">
-                View Cart
-              </Link>
-            </div>
-
-            <Link to="/" className="back-home-link">
-              ← Continue Shopping
-            </Link>
-          </div>
+      <section className="single-product-page">
+        <div className="single-product-layout">
+          <SingleProductGallery product={product} />
+          <SingleProductInfo
+            product={product}
+            addToCart={addToCart}
+            similarProducts={similarProducts}
+          />
         </div>
       </section>
 

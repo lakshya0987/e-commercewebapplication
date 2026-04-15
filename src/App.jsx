@@ -9,83 +9,65 @@ import productsData from "./products";
 
 function App() {
   const [search, setSearch] = useState("");
-  const [selectedRating, setSelectedRating] = useState(0);
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
   const [cart, setCart] = useState([]);
 
-  const normalizedProducts = useMemo(() => {
+  const products = useMemo(() => {
     return productsData.map((product) => ({
       ...product,
-      image:
-        product.thumbnail ||
-        product.image ||
-        product.images?.[0] ||
-        "https://via.placeholder.com/300x220?text=Product",
-      rating: Number(product.rating) || 0,
       price: Number(product.price) || 0,
-      description:
-        product.description || "High quality product with premium finish.",
+      rating: Number(product.rating) || 0,
+      delivery: product.delivery || 34.64,
+      condition: product.condition || "Pre-owned",
+      image: product.image || product.thumbnail || product.images?.[0] || "",
+      gallery:
+        product.gallery && product.gallery.length > 0
+          ? product.gallery
+          : [product.image || product.thumbnail || product.images?.[0] || ""],
     }));
   }, []);
 
   const filteredProducts = useMemo(() => {
-    return normalizedProducts.filter((product) => {
-      const matchesSearch = product.title
-        .toLowerCase()
-        .includes(search.toLowerCase());
-
-      const matchesRating =
-        selectedRating === 0 || product.rating >= selectedRating;
-
-      const matchesMinPrice =
-        minPrice === "" || product.price >= Number(minPrice);
-
-      const matchesMaxPrice =
-        maxPrice === "" || product.price <= Number(maxPrice);
-
-      return matchesSearch && matchesRating && matchesMinPrice && matchesMaxPrice;
-    });
-  }, [normalizedProducts, search, selectedRating, minPrice, maxPrice]);
+    return products.filter((product) =>
+      product.title.toLowerCase().includes(search.toLowerCase())
+    );
+  }, [products, search]);
 
   const addToCart = (product) => {
-    setCart((prevCart) => {
-      const existingItem = prevCart.find((item) => item.id === product.id);
+    setCart((prev) => {
+      const existing = prev.find((item) => item.id === product.id);
 
-      if (existingItem) {
-        return prevCart.map((item) =>
+      if (existing) {
+        return prev.map((item) =>
           item.id === product.id
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       }
 
-      return [...prevCart, { ...product, quantity: 1 }];
+      return [...prev, { ...product, quantity: 1 }];
     });
   };
 
   const increaseQuantity = (id) => {
-    setCart((prevCart) =>
-      prevCart.map((item) =>
+    setCart((prev) =>
+      prev.map((item) =>
         item.id === id ? { ...item, quantity: item.quantity + 1 } : item
       )
     );
   };
 
   const decreaseQuantity = (id) => {
-    setCart((prevCart) =>
-      prevCart
+    setCart((prev) =>
+      prev
         .map((item) =>
-          item.id === id
-            ? { ...item, quantity: item.quantity - 1 }
-            : item
+          item.id === id ? { ...item, quantity: item.quantity - 1 } : item
         )
         .filter((item) => item.quantity > 0)
     );
   };
 
   const removeFromCart = (id) => {
-    setCart((prevCart) => prevCart.filter((item) => item.id !== id));
+    setCart((prev) => prev.filter((item) => item.id !== id));
   };
 
   const totalCartItems = cart.reduce((total, item) => total + item.quantity, 0);
@@ -99,15 +81,8 @@ function App() {
             products={filteredProducts}
             search={search}
             setSearch={setSearch}
-            selectedRating={selectedRating}
-            setSelectedRating={setSelectedRating}
-            minPrice={minPrice}
-            setMinPrice={setMinPrice}
-            maxPrice={maxPrice}
-            setMaxPrice={setMaxPrice}
-            addToCart={addToCart}
-            cart={cart}
             totalCartItems={totalCartItems}
+            addToCart={addToCart}
           />
         }
       />
@@ -116,9 +91,8 @@ function App() {
         path="/product/:id"
         element={
           <ProductDetails
-            products={normalizedProducts}
+            products={products}
             addToCart={addToCart}
-            cart={cart}
             totalCartItems={totalCartItems}
             search={search}
             setSearch={setSearch}
@@ -127,13 +101,11 @@ function App() {
       />
 
       <Route
-        path="/cart"
+        path="/product/:id"
         element={
-          <Cart
-            cart={cart}
-            increaseQuantity={increaseQuantity}
-            decreaseQuantity={decreaseQuantity}
-            removeFromCart={removeFromCart}
+          <ProductDetails
+            products={products}
+            addToCart={addToCart}
             totalCartItems={totalCartItems}
             search={search}
             setSearch={setSearch}
