@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import "./App.css";
 
 import Home from "./pages/Home";
@@ -8,43 +8,75 @@ import Cart from "./pages/Cart";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 
-import productsData from "./products";
-
 function App() {
   const [search, setSearch] = useState("");
   const [cart, setCart] = useState([]);
 
-  // ⭐ Filters
   const [selectedRating, setSelectedRating] = useState(0);
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
 
-  // 🛍 Products normalization
-  const products = useMemo(() => {
-    return productsData.map((product) => ({
-      ...product,
-      price: Number(product.price) || 0,
-      rating: Number(product.rating) || 0,
-      delivery: product.delivery || 34.64,
-      condition: product.condition || "Pre-owned",
-      image:
-        product.image ||
-        product.thumbnail ||
-        product.images?.[0] ||
-        "",
-      gallery:
-        product.gallery && product.gallery.length > 0
-          ? product.gallery
-          : [
-              product.image ||
-                product.thumbnail ||
-                product.images?.[0] ||
-                "",
-            ],
-    }));
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const response = await fetch("https://dummyjson.com/products", {
+          signal: controller.signal,
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch products");
+        }
+
+        const data = await response.json();
+
+        const normalizedProducts = (data.products || []).map((product) => ({
+          ...product,
+          price: Number(product.price) || 0,
+          rating: Number(product.rating) || 0,
+          delivery: product.delivery || 34.64,
+          condition: product.condition || "New",
+          image:
+            product.image ||
+            product.thumbnail ||
+            product.images?.[0] ||
+            "",
+          gallery:
+            product.gallery && product.gallery.length > 0
+              ? product.gallery
+              : product.images && product.images.length > 0
+              ? product.images
+              : [
+                  product.image ||
+                    product.thumbnail ||
+                    product.images?.[0] ||
+                    "",
+                ],
+        }));
+
+        setProducts(normalizedProducts);
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          setError(err.message || "Something went wrong");
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+
+    return () => controller.abort();
   }, []);
 
-  // 🔍 Filtering logic
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
       const matchesSearch = product.title
@@ -69,7 +101,6 @@ function App() {
     });
   }, [products, search, selectedRating, minPrice, maxPrice]);
 
-  // 🛒 Cart functions
   const addToCart = (product) => {
     setCart((prev) => {
       const existing = prev.find((item) => item.id === product.id);
@@ -89,9 +120,7 @@ function App() {
   const increaseQuantity = (id) => {
     setCart((prev) =>
       prev.map((item) =>
-        item.id === id
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
+        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
       )
     );
   };
@@ -100,28 +129,22 @@ function App() {
     setCart((prev) =>
       prev
         .map((item) =>
-          item.id === id
-            ? { ...item, quantity: item.quantity - 1 }
-            : item
+          item.id === id ? { ...item, quantity: item.quantity - 1 } : item
         )
         .filter((item) => item.quantity > 0)
     );
   };
 
   const removeFromCart = (id) => {
-    setCart((prev) =>
-      prev.filter((item) => item.id !== id)
-    );
+    setCart((prev) => prev.filter((item) => item.id !== id));
   };
 
-  // 🔄 Clear filters
   const clearFilters = () => {
     setSelectedRating(0);
     setMinPrice("");
     setMaxPrice("");
   };
 
-  // 🧮 Cart count
   const totalCartItems = cart.reduce(
     (total, item) => total + item.quantity,
     0
@@ -129,8 +152,6 @@ function App() {
 
   return (
     <Routes>
-
-      {/* 🏠 HOME */}
       <Route
         path="/"
         element={
@@ -148,11 +169,12 @@ function App() {
             maxPrice={maxPrice}
             setMaxPrice={setMaxPrice}
             clearFilters={clearFilters}
+            loading={loading}
+            error={error}
           />
         }
       />
 
-      {/* 📦 PRODUCT DETAILS */}
       <Route
         path="/product/:id"
         element={
@@ -162,11 +184,12 @@ function App() {
             totalCartItems={totalCartItems}
             search={search}
             setSearch={setSearch}
+            loading={loading}
+            error={error}
           />
         }
       />
 
-      {/* 🛒 CART */}
       <Route
         path="/cart"
         element={
@@ -179,12 +202,8 @@ function App() {
         }
       />
 
-      {/* 🔐 LOGIN */}
       <Route path="/login" element={<Login />} />
-
-      {/* 🆕 SIGNUP */}
       <Route path="/signup" element={<Signup />} />
-
     </Routes>
   );
 }

@@ -15,71 +15,61 @@ function Home({
   maxPrice,
   setMaxPrice,
   clearFilters,
+  loading,
+  error,
 }) {
   return (
     <div className="page-wrapper home-page-new">
-      
-      {/* ================= NAVBAR ================= */}
       <header className="custom-home-navbar">
         <div className="home-logo-box">
           <h2>Canva</h2>
         </div>
 
         <nav className="home-nav-links">
-          <a href="/">Home</a>
-          <a href="/">About</a>
-          <a href="/">Contact</a>
-          <a href="/">Address</a>
+          <Link to="/">Home</Link>
+          <a href="#about">About</a>
+          <a href="#contact">Contact</a>
+          <a href="#address">Address</a>
         </nav>
 
-      <div className="home-search-cart">
+        <div className="home-search-cart">
+          
 
-  {/* LOGIN BUTTON */}
+          <div className="home-search-box">
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <span className="search-icon">🔍</span>
+          </div>
 
-  {/* SEARCH */}
-  <div className="home-search-box">
-    <input
-      type="text"
-      placeholder="Search products..."
-      value={search}
-      onChange={(e) => setSearch(e.target.value)}
-    />
-    <span className="search-icon">🔍</span>
-  </div>
+          <Link to="/login" className="home-login-btn">
+            Login
+          </Link>
 
-  {/* CART */}
-
-  <Link to="/login" className="home-login-btn">
-    Login
-  </Link>
-  <Link to="/cart" className="home-cart-icon">
-    🛒
-    {totalCartItems > 0 && (
-      <span className="cart-count-badge">{totalCartItems}</span>
-    )}
-  </Link>
-
-</div>
+          <Link to="/cart" className="home-cart-icon">
+            🛒
+            {totalCartItems > 0 && (
+              <span className="cart-count-badge">{totalCartItems}</span>
+            )}
+          </Link>
+        </div>
       </header>
 
-      {/* ================= MAIN LAYOUT ================= */}
       <main className="home-content-layout">
-
-        {/* ================= SIDEBAR ================= */}
         <aside className="home-sidebar">
-
-          {/* Popular Ideas */}
           <div className="sidebar-box">
             <h3>Popular Shopping Ideas</h3>
             <ul>
-              <li>Philips</li>
-              <li>All-in-one</li>
-              <li>Professional</li>
-              <li>Waterproof</li>
+              <li>Beauty</li>
+              <li>Fragrances</li>
+              <li>Furniture</li>
+              <li>Groceries</li>
             </ul>
           </div>
 
-          {/* ⭐ Rating Filter */}
           <div className="sidebar-box">
             <h3>Customer Reviews</h3>
 
@@ -87,13 +77,9 @@ function Home({
               {[1, 2, 3, 4, 5].map((star) => (
                 <span
                   key={star}
-                  className={`star ${
-                    star <= selectedRating ? "active-star" : ""
-                  }`}
+                  className={`star ${star <= selectedRating ? "active-star" : ""}`}
                   onClick={() =>
-                    setSelectedRating(
-                      selectedRating === star ? 0 : star
-                    )
+                    setSelectedRating(selectedRating === star ? 0 : star)
                   }
                 >
                   ★
@@ -112,10 +98,8 @@ function Home({
             </button>
           </div>
 
-          {/* Price Filter */}
           <div className="sidebar-box">
             <h3>Price</h3>
-
             <p>
               ₹{minPrice || 0} - ₹{maxPrice || "Any"}
             </p>
@@ -136,27 +120,27 @@ function Home({
           </div>
         </aside>
 
-        {/* ================= PRODUCTS ================= */}
         <section className="home-products-area">
-
-          {products.length === 0 ? (
+          {loading ? (
+            <div className="no-products-box">
+              <h2>Loading products...</h2>
+            </div>
+          ) : error ? (
+            <div className="no-products-box">
+              <h2>{error}</h2>
+            </div>
+          ) : products.length === 0 ? (
             <div className="no-products-box">
               <h2>No products found</h2>
               <p>Try changing your search or filter values.</p>
             </div>
           ) : (
             <div className="homepage-products-grid">
-
               {products.map((product) => {
-                const isAdded = cart.some(
-                  (item) => item.id === product.id
-                );
+                const isAdded = cart.some((item) => item.id === product.id);
 
                 return (
-                  <div
-                    className="homepage-product-card"
-                    key={product.id}
-                  >
+                  <div className="homepage-product-card" key={product.id}>
                     <Link
                       to={`/product/${product.id}`}
                       className="homepage-product-link"
@@ -180,9 +164,7 @@ function Home({
                           Free delivery | 7 days return
                         </p>
 
-                        <h2 className="homepage-price">
-                          ₹{product.price}
-                        </h2>
+                        <h2 className="homepage-price">₹{product.price}</h2>
 
                         <p className="homepage-rating-text">
                           ⭐ {product.rating.toFixed(1)}
@@ -201,7 +183,6 @@ function Home({
                   </div>
                 );
               })}
-
             </div>
           )}
         </section>
