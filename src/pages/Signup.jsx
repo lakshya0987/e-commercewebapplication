@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Signup() {
   const [name, setName] = useState("");
@@ -11,11 +12,11 @@ function Signup() {
   const handleSignup = (e) => {
     e.preventDefault();
 
-    // Dummy signup logic
-    alert("Account created successfully!");
+    toast.success("Account created successfully!");
 
-    // Redirect to login page
-    navigate("/login");
+    setTimeout(() => {
+      navigate("/login");
+    }, 1500);
   };
 
   return (
@@ -25,7 +26,6 @@ function Signup() {
         <p className="login-subtitle">Sign up to get started</p>
 
         <form onSubmit={handleSignup} className="login-form">
-
           <input
             type="text"
             placeholder="Full Name"

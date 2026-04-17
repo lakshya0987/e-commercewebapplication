@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import "./App.css";
 
+import { ToastContainer, toast } from "react-toastify";
 import Home from "./pages/Home";
 import ProductDetails from "./pages/ProductDetails";
 import Cart from "./pages/Cart";
@@ -54,18 +55,14 @@ function App() {
               ? product.gallery
               : product.images && product.images.length > 0
               ? product.images
-              : [
-                  product.image ||
-                    product.thumbnail ||
-                    product.images?.[0] ||
-                    "",
-                ],
+              : [product.image || product.thumbnail || product.images?.[0] || ""],
         }));
 
         setProducts(normalizedProducts);
       } catch (err) {
         if (err.name !== "AbortError") {
           setError(err.message || "Something went wrong");
+          toast.error("Unable to load products");
         }
       } finally {
         setLoading(false);
@@ -101,21 +98,24 @@ function App() {
     });
   }, [products, search, selectedRating, minPrice, maxPrice]);
 
-  const addToCart = (product) => {
-    setCart((prev) => {
-      const existing = prev.find((item) => item.id === product.id);
+ const addToCart = (product) => {
+  const existing = cart.find((item) => item.id === product.id);
 
-      if (existing) {
-        return prev.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
+  if (existing) {
+    setCart((prev) =>
+      prev.map((item) =>
+        item.id === product.id
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      )
+    );
 
-      return [...prev, { ...product, quantity: 1 }];
-    });
-  };
+    toast.info("Quantity updated");
+  } else {
+    setCart((prev) => [...prev, { ...product, quantity: 1 }]);
+    toast.success("Added to cart");
+  }
+};
 
   const increaseQuantity = (id) => {
     setCart((prev) =>
@@ -137,12 +137,14 @@ function App() {
 
   const removeFromCart = (id) => {
     setCart((prev) => prev.filter((item) => item.id !== id));
+    toast.error("Removed from cart");
   };
 
   const clearFilters = () => {
     setSelectedRating(0);
     setMinPrice("");
     setMaxPrice("");
+    toast.info("Filters cleared");
   };
 
   const totalCartItems = cart.reduce(
@@ -151,60 +153,73 @@ function App() {
   );
 
   return (
-    <Routes>
-      <Route
-        path="/"
-        element={
-          <Home
-            products={filteredProducts}
-            search={search}
-            setSearch={setSearch}
-            totalCartItems={totalCartItems}
-            addToCart={addToCart}
-            cart={cart}
-            selectedRating={selectedRating}
-            setSelectedRating={setSelectedRating}
-            minPrice={minPrice}
-            setMinPrice={setMinPrice}
-            maxPrice={maxPrice}
-            setMaxPrice={setMaxPrice}
-            clearFilters={clearFilters}
-            loading={loading}
-            error={error}
-          />
-        }
-      />
+    <>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Home
+              products={filteredProducts}
+              search={search}
+              setSearch={setSearch}
+              totalCartItems={totalCartItems}
+              addToCart={addToCart}
+              cart={cart}
+              selectedRating={selectedRating}
+              setSelectedRating={setSelectedRating}
+              minPrice={minPrice}
+              setMinPrice={setMinPrice}
+              maxPrice={maxPrice}
+              setMaxPrice={setMaxPrice}
+              clearFilters={clearFilters}
+              loading={loading}
+              error={error}
+            />
+          }
+        />
 
-      <Route
-        path="/product/:id"
-        element={
-          <ProductDetails
-            products={products}
-            addToCart={addToCart}
-            totalCartItems={totalCartItems}
-            search={search}
-            setSearch={setSearch}
-            loading={loading}
-            error={error}
-          />
-        }
-      />
+        <Route
+          path="/product/:id"
+          element={
+            <ProductDetails
+              products={products}
+              addToCart={addToCart}
+              totalCartItems={totalCartItems}
+              search={search}
+              setSearch={setSearch}
+              loading={loading}
+              error={error}
+            />
+          }
+        />
 
-      <Route
-        path="/cart"
-        element={
-          <Cart
-            cart={cart}
-            increaseQuantity={increaseQuantity}
-            decreaseQuantity={decreaseQuantity}
-            removeFromCart={removeFromCart}
-          />
-        }
-      />
+        <Route
+          path="/cart"
+          element={
+            <Cart
+              cart={cart}
+              increaseQuantity={increaseQuantity}
+              decreaseQuantity={decreaseQuantity}
+              removeFromCart={removeFromCart}
+            />
+          }
+        />
 
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
-    </Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+      </Routes>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="light"
+      />
+    </>
   );
 }
 

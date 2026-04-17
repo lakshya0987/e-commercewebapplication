@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -9,13 +10,13 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert(`Logged in with Email: ${email}`);
+    toast.success("Login successful");
   };
 
   return (
     <div className="login-page">
       <div className="login-card">
-        <h1 className="login-title">Login In</h1>
+        <h1 className="login-title">Sign In</h1>
         <p className="login-subtitle">Enter your credentials to continue</p>
 
         <form onSubmit={handleSubmit} className="login-form">
@@ -59,9 +60,7 @@ function Login() {
               <span>Remember me</span>
             </label>
 
-            <Link to="/forgot-password" className="forgot-password-link">
-              Forgot password?
-            </Link>
+            <span className="forgot-password-link">Forgot password?</span>
           </div>
 
           <button type="submit" className="login-submit-btn">
