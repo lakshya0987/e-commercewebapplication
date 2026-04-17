@@ -1,4 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
+// import { Link } from "react-router-dom";
 
 function MainHeader({ search, setSearch, totalCartItems }) {
   const navigate = useNavigate();
@@ -40,9 +41,19 @@ function MainHeader({ search, setSearch, totalCartItems }) {
         <button>Search</button>
       </div>
 
-      <Link to="/cart" className="cart-counter-link">
-        Cart ({totalCartItems})
-      </Link>
+      <div className="header-right-section">
+
+  {/* LOGIN BUTTON */}
+  <Link to="/login" className="login-nav-btn">
+    Login
+  </Link>
+
+  {/* CART */}
+  <Link to="/cart" className="cart-counter-link">
+    🛒 {totalCartItems}
+  </Link>
+
+</div>
     </div>
   );
 }

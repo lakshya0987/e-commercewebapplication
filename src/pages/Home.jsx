@@ -32,24 +32,34 @@ function Home({
           <a href="/">Address</a>
         </nav>
 
-        <div className="home-search-cart">
-          <div className="home-search-box">
-            <input
-              type="text"
-              placeholder="Search products..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-            <span className="search-icon">🔍</span>
-          </div>
+      <div className="home-search-cart">
 
-          <Link to="/cart" className="home-cart-icon">
-            🛒
-            {totalCartItems > 0 && (
-              <span className="cart-count-badge">{totalCartItems}</span>
-            )}
-          </Link>
-        </div>
+  {/* LOGIN BUTTON */}
+
+  {/* SEARCH */}
+  <div className="home-search-box">
+    <input
+      type="text"
+      placeholder="Search products..."
+      value={search}
+      onChange={(e) => setSearch(e.target.value)}
+    />
+    <span className="search-icon">🔍</span>
+  </div>
+
+  {/* CART */}
+
+  <Link to="/login" className="home-login-btn">
+    Login
+  </Link>
+  <Link to="/cart" className="home-cart-icon">
+    🛒
+    {totalCartItems > 0 && (
+      <span className="cart-count-badge">{totalCartItems}</span>
+    )}
+  </Link>
+
+</div>
       </header>
 
       {/* ================= MAIN LAYOUT ================= */}

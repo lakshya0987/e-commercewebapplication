@@ -5,15 +5,21 @@ import "./App.css";
 import Home from "./pages/Home";
 import ProductDetails from "./pages/ProductDetails";
 import Cart from "./pages/Cart";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+
 import productsData from "./products";
 
 function App() {
   const [search, setSearch] = useState("");
   const [cart, setCart] = useState([]);
+
+  // ⭐ Filters
   const [selectedRating, setSelectedRating] = useState(0);
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
 
+  // 🛍 Products normalization
   const products = useMemo(() => {
     return productsData.map((product) => ({
       ...product,
@@ -21,14 +27,24 @@ function App() {
       rating: Number(product.rating) || 0,
       delivery: product.delivery || 34.64,
       condition: product.condition || "Pre-owned",
-      image: product.image || product.thumbnail || product.images?.[0] || "",
+      image:
+        product.image ||
+        product.thumbnail ||
+        product.images?.[0] ||
+        "",
       gallery:
         product.gallery && product.gallery.length > 0
           ? product.gallery
-          : [product.image || product.thumbnail || product.images?.[0] || ""],
+          : [
+              product.image ||
+                product.thumbnail ||
+                product.images?.[0] ||
+                "",
+            ],
     }));
   }, []);
 
+  // 🔍 Filtering logic
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
       const matchesSearch = product.title
@@ -53,6 +69,7 @@ function App() {
     });
   }, [products, search, selectedRating, minPrice, maxPrice]);
 
+  // 🛒 Cart functions
   const addToCart = (product) => {
     setCart((prev) => {
       const existing = prev.find((item) => item.id === product.id);
@@ -72,7 +89,9 @@ function App() {
   const increaseQuantity = (id) => {
     setCart((prev) =>
       prev.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+        item.id === id
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
       )
     );
   };
@@ -81,26 +100,37 @@ function App() {
     setCart((prev) =>
       prev
         .map((item) =>
-          item.id === id ? { ...item, quantity: item.quantity - 1 } : item
+          item.id === id
+            ? { ...item, quantity: item.quantity - 1 }
+            : item
         )
         .filter((item) => item.quantity > 0)
     );
   };
 
   const removeFromCart = (id) => {
-    setCart((prev) => prev.filter((item) => item.id !== id));
+    setCart((prev) =>
+      prev.filter((item) => item.id !== id)
+    );
   };
 
+  // 🔄 Clear filters
   const clearFilters = () => {
     setSelectedRating(0);
     setMinPrice("");
     setMaxPrice("");
   };
 
-  const totalCartItems = cart.reduce((total, item) => total + item.quantity, 0);
+  // 🧮 Cart count
+  const totalCartItems = cart.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
 
   return (
     <Routes>
+
+      {/* 🏠 HOME */}
       <Route
         path="/"
         element={
@@ -122,6 +152,7 @@ function App() {
         }
       />
 
+      {/* 📦 PRODUCT DETAILS */}
       <Route
         path="/product/:id"
         element={
@@ -135,6 +166,7 @@ function App() {
         }
       />
 
+      {/* 🛒 CART */}
       <Route
         path="/cart"
         element={
@@ -146,6 +178,13 @@ function App() {
           />
         }
       />
+
+      {/* 🔐 LOGIN */}
+      <Route path="/login" element={<Login />} />
+
+      {/* 🆕 SIGNUP */}
+      <Route path="/signup" element={<Signup />} />
+
     </Routes>
   );
 }
