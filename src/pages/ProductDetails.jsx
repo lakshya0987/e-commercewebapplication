@@ -1,6 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { useMemo, useState, useEffect } from "react";
 import Footer from "../components/Footer";
+import profileIcon from "../assets/profile.png";
 
 function ProductDetails({
   products,
@@ -56,8 +57,8 @@ function ProductDetails({
 
         {user ? (
           <>
-            <Link to="/profile" className="home-profile-btn">
-              Profile
+            <Link to="/profile" className="profile-icon-link">
+                <img src={profileIcon} alt="Profile" className="profile-icon" />
             </Link>
             <span className="home-user-text">Hi, {user.name}</span>
             <button className="home-logout-btn" onClick={handleLogout}>

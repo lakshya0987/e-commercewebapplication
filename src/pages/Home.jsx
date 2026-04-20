@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import Footer from "../components/Footer";
+import profileIcon from "../assets/profile.png";
 
 function Home({
   products,
@@ -47,9 +48,9 @@ function Home({
 
           {user ? (
             <>
-              <Link to="/profile" className="home-profile-btn">
-                Profile
-              </Link>
+              <Link to="/profile" className="profile-icon-link">
+                  <img src={profileIcon} alt="Profile" className="profile-icon" />
+                </Link>
               <span className="home-user-text">Hi, {user.name}</span>
               <button className="home-logout-btn" onClick={handleLogout}>
                 Logout

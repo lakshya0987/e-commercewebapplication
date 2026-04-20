@@ -2701,9 +2701,9 @@ background: #ffcc00;
   cursor: pointer;
 }
 
-.profile-save-btn:hover {
+/* .profile-save-btn:hover {
   background: #e6b800;
-}
+} */
 
 @media (max-width: 700px) {
   .profile-grid {
@@ -2713,4 +2713,25 @@ background: #ffcc00;
   .profile-top-row h1 {
     font-size: 28px;
   }
+}
+
+.profile-icon-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+  /* border: 2px solid #ffcc00; */
+  transition: 0.2s ease;
+}
+
+.profile-icon:hover {
+  transform: scale(1.1);
+  border-color: #e6b800;
 }
