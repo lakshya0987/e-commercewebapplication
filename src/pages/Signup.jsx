@@ -25,6 +25,11 @@ function Signup() {
       name,
       email,
       password,
+      phone: "",
+      address: "",
+      city: "",
+      state: "",
+      pincode: "",
     };
 
     const updatedUsers = [...savedUsers, newUser];

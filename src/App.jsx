@@ -8,6 +8,7 @@ import ProductDetails from "./pages/ProductDetails";
 import Cart from "./pages/Cart";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Profile from "./pages/Profile";
 
 function App() {
   const [search, setSearch] = useState("");
@@ -176,6 +177,20 @@ function App() {
     toast.info("Logged out successfully");
   };
 
+  const handleUpdateProfile = (updatedProfile) => {
+    setUser(updatedProfile);
+
+    const savedUsers = JSON.parse(localStorage.getItem("users")) || [];
+    const updatedUsers = savedUsers.map((item) =>
+      item.email === updatedProfile.email ? updatedProfile : item
+    );
+
+    localStorage.setItem("users", JSON.stringify(updatedUsers));
+    localStorage.setItem("loggedInUser", JSON.stringify(updatedProfile));
+
+    toast.success("Profile updated successfully");
+  };
+
   const totalCartItems = cart.reduce(
     (total, item) => total + item.quantity,
     0
@@ -240,6 +255,15 @@ function App() {
 
         <Route path="/login" element={<Login setUser={setUser} />} />
         <Route path="/signup" element={<Signup />} />
+        <Route
+          path="/profile"
+          element={
+            <Profile
+              user={user}
+              handleUpdateProfile={handleUpdateProfile}
+            />
+          }
+        />
       </Routes>
 
       <ToastContainer

@@ -25,8 +25,7 @@ function Login({ setUser }) {
     }
 
     const loggedInUser = {
-      name: matchedUser.name,
-      email: matchedUser.email,
+      ...matchedUser,
       rememberMe,
     };
 

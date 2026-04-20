@@ -56,6 +56,9 @@ function ProductDetails({
 
         {user ? (
           <>
+            <Link to="/profile" className="home-profile-btn">
+              Profile
+            </Link>
             <span className="home-user-text">Hi, {user.name}</span>
             <button className="home-logout-btn" onClick={handleLogout}>
               Logout
