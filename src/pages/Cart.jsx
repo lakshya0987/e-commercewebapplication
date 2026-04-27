@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 function Cart({
   cart,
@@ -6,6 +7,8 @@ function Cart({
   decreaseQuantity,
   removeFromCart,
   placeOrder,
+  user,
+  handleUpdateProfile,
 }) {
   const totalPrice = cart.reduce(
     (total, item) => total + item.price * item.quantity,
@@ -28,6 +31,24 @@ function Cart({
       </div>
     );
   }
+
+  const [showAddressForm, setShowAddressForm] = useState(false);
+const [address, setAddress] = useState(user?.address || "");
+
+const saveAddress = () => {
+  if (!address.trim()) {
+    alert("Please enter your address");
+    return;
+  }
+
+  const updatedUser = {
+    ...user,
+    address: address,
+  };
+
+  handleUpdateProfile(updatedUser);
+  setShowAddressForm(false);
+};
 
   return (
     <div className="cart-page">
@@ -73,6 +94,46 @@ function Cart({
             <span>Total Price</span>
             <span>₹{totalPrice.toFixed(2)}</span>
           </div>
+
+          <div className="cart-address-box">
+  <h3>Delivery Address</h3>
+
+  {!showAddressForm ? (
+    <>
+      <p>
+        {user?.address ? user.address : "No address added yet"}
+      </p>
+
+      <button
+        className="change-address-btn"
+        onClick={() => setShowAddressForm(true)}
+      >
+        Change Address
+      </button>
+    </>
+  ) : (
+    <div className="cart-address-form">
+      <textarea
+        value={address}
+        onChange={(e) => setAddress(e.target.value)}
+        placeholder="Enter your delivery address"
+      />
+
+      <div className="address-btn-row">
+        <button className="save-address-btn" onClick={saveAddress}>
+          Save Address
+        </button>
+
+        <button
+          className="cancel-address-btn"
+          onClick={() => setShowAddressForm(false)}
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  )}
+</div>
 
           <button className="checkout-btn" onClick={placeOrder}>
             Checkout

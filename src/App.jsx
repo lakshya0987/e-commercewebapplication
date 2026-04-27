@@ -375,17 +375,19 @@ const addToWishlist = (product) => {
         />
 
         <Route
-          path="/cart"
-          element={
-            <Cart
-              cart={cart}
-              increaseQuantity={increaseQuantity}
-              decreaseQuantity={decreaseQuantity}
-              removeFromCart={removeFromCart}
-              placeOrder={placeOrder}
-            />
-          }
-        />
+            path="/cart"
+            element={
+              <Cart
+                cart={cart}
+                increaseQuantity={increaseQuantity}
+                decreaseQuantity={decreaseQuantity}
+                removeFromCart={removeFromCart}
+                placeOrder={placeOrder}
+                user={user}
+                handleUpdateProfile={handleUpdateProfile}
+              />
+            }
+          />
 
         <Route
           path="/wishlist"
