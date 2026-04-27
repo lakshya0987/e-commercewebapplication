@@ -205,7 +205,7 @@ function App() {
     }
   };
 
- const addToWishlist = (product) => {
+const addToWishlist = (product) => {
   if (!user) {
     toast.error("Please login first");
     return;
@@ -214,9 +214,7 @@ function App() {
   const alreadyExist = wishlist.some((item) => item.id === product.id);
 
   if (alreadyExist) {
-    setWishlist((prev) =>
-      prev.filter((item) => item.id !== product.id)
-    );
+    setWishlist((prev) => prev.filter((item) => item.id !== product.id));
     toast.info("Removed from wishlist");
   } else {
     setWishlist((prev) => [...prev, product]);
