@@ -205,22 +205,24 @@ function App() {
     }
   };
 
-  const addToWishlist = (product) => {
-    if (!user) {
-      toast.error("Please login first");
-      return;
-    }
+ const addToWishlist = (product) => {
+  if (!user) {
+    toast.error("Please login first");
+    return;
+  }
 
-    const alreadyExist = wishlist.some((item) => item.id === product.id);
+  const alreadyExist = wishlist.some((item) => item.id === product.id);
 
-    if (alreadyExist) {
-      toast.info("Already in wishlist");
-      return;
-    }
-
+  if (alreadyExist) {
+    setWishlist((prev) =>
+      prev.filter((item) => item.id !== product.id)
+    );
+    toast.info("Removed from wishlist");
+  } else {
     setWishlist((prev) => [...prev, product]);
     toast.success("Added to wishlist");
-  };
+  }
+};
 
   const removeFromWishlist = (id) => {
     setWishlist((prev) => prev.filter((item) => item.id !== id));
